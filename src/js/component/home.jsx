@@ -1,41 +1,26 @@
-// src/components/TodoList.js
-import React, { useState, useEffect } from 'react';
+// src/Todo.js
+import React, { useState } from 'react';
 
-const TodoList = () => {
+const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
 
-  useEffect(() => {
-    
-    fetch('/api/todos')
-      .then(response => response.json())
-      .then(data => setTodos(data));
-  }, []);
-
+  // Add a new todo
   const addTodo = () => {
-    if (newTodo.trim() === '') return;
+    if (!newTodo) return;
 
-    fetch('/api/todos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text: newTodo }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        setTodos([...todos, data]);
-        setNewTodo('');
-      });
+    const todoItem = {
+      title: newTodo,
+      id: Date.now(), // Unique ID for each todo
+    };
+
+    setTodos((prev) => [...prev, todoItem]);
+    setNewTodo('');
   };
 
-  const removeTodo = id => {
-    fetch(`/api/todos/${id}`, {
-      method: 'DELETE',
-    })
-      .then(() => {
-        setTodos(todos.filter(todo => todo.id !== id));
-      });
+  // Remove a todo
+  const removeTodo = (id) => {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 
   return (
@@ -47,14 +32,18 @@ const TodoList = () => {
         onChange={(e) => setNewTodo(e.target.value)}
         placeholder="Add a new todo"
       />
-      <button onClick={addTodo}>Add</button>
+      <button onClick={addTodo}>Add Todo</button>
       <ul>
-        {todos.map(todo => (
-          <TodoItem key={todo.id} todo={todo} onRemove={removeTodo} />
+        {todos.map((todo) => (
+          <li key={todo.id}>
+            {todo.title}
+            <button onClick={() => removeTodo(todo.id)}>Remove</button>
+          </li>
         ))}
       </ul>
     </div>
   );
 };
 
-export default TodoList;
+export default Todo;
+
