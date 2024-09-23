@@ -5,20 +5,19 @@ const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
 
-  // Add a new todo
+ 
   const addTodo = () => {
     if (!newTodo) return;
 
     const todoItem = {
       title: newTodo,
-      id: Date.now(), // Unique ID for each todo
+      id: Date.now(), 
     };
 
     setTodos((prev) => [...prev, todoItem]);
     setNewTodo('');
   };
 
-  // Remove a todo
   const removeTodo = (id) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
