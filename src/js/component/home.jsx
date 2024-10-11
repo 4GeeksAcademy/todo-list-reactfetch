@@ -1,48 +1,39 @@
 // src/Todo.js
 import React, { useState } from 'react';
 
-const Todo = () => {
+const Home = () => {
+  const [inputValue, setInputValue] = useState("");
   const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState('');
-
- 
-  const addTodo = () => {
-    if (!newTodo) return;
-
-    const todoItem = {
-      title: newTodo,
-      id: Date.now(), 
-    };
-
-    setTodos((prev) => [...prev, todoItem]);
-    setNewTodo('');
-  };
-
-  const removeTodo = (id) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
-  };
-
-  return (
-    <div>
-      <h1>Todo List</h1>
-      <input
-        type="text"
-        value={newTodo}
-        onChange={(e) => setNewTodo(e.target.value)}
-        placeholder="Add a new todo"
-      />
-      <button onClick={addTodo}>Add Todo</button>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            {todo.title}
-            <button onClick={() => removeTodo(todo.id)}>Remove</button>
+  
+    return (
+      <div className = "container">
+        <h1>Todos</h1>
+        <ul> 
+          <li>
+            <input
+            type = "text"
+            onChange = {(e) => setInputValue(e.target.value)}
+            value = {inputValue}
+            onKeyPress = {(e) => {
+              if (e.key == "Enter") {
+                setTodos(todos.concat([inputValue]));
+                setInputValue("");
+              }
+            }}
+            placeholder = "What Needs to be done?"></input>
           </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
+          {todos.map((item, index) => (
+          <li> 
+            {item} <i class = "fas fa-trash-alt" onClick = {() => setTodos( todos.filter(( t, currentIndex) => index  != currentIndex 
+            )
+            )
+            }></i>
+            </li>
+          ))}
+        </ul>
+        <div>{todos.length} tasks</div>
+      </div>
+    );
+  };
 
-export default Todo;
-
+export default Home;
