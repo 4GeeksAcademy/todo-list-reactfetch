@@ -1,10 +1,70 @@
 // src/Todo.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Home = () => {
   const [inputValue, setInputValue] = useState("");
   const [todos, setTodos] = useState([]);
-  
+ 
+  useEffect(() => {
+    const fetchTodos = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch('https://playground.4geeks.com/todo/');
+        if (!response.ok) {
+          throw new Error('Failed to fetch todos');
+        }
+        const data = await response.json();
+        setTodos(data); // Set the fetched todos in the state
+      } catch (error) {
+        setError(error.message); // Set error message
+      } finally {
+        setLoading(false); // End loading
+      }
+    };
+
+    fetchTodos(); // Call fetchTodos when the component mounts
+  }, []);
+
+  const handleAddTodo = async (e) => {
+    e.preventDefault();
+
+    // Prevent adding empty todos
+    if (!newTodo.trim()) return;
+
+    const newTodoObj = {
+      title: newTodo,
+      completed: false,  // Assuming 'completed' is false by default
+    };
+
+    try {
+      // Send POST request to the API to create a new todo
+      const response = await fetch('https://playground.4geeks.com/todo/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newTodoObj), // Convert todo object to JSON
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add todo');
+      }
+
+      const savedTodo = await response.json(); // Parse response as JSON
+      // Add the new todo to the existing list of todos
+      setTodos([...todos, savedTodo]);
+      setNewTodo(''); // Clear the input field after adding
+    } catch (error) {
+      setError(error.message); // Display error message if something fails
+    }
+  };
+
+  // Handle input changes for the new todo
+  const handleInputChange = (e) => {
+    setNewTodo(e.target.value); // Update the newTodo state with the input value
+  };
+
+
     return (
       <div className = "container">
         <h1>Todos</h1>
