@@ -16,9 +16,9 @@ const Home = () => {
         const data = await response.json();
         setTodos(data); // Set the fetched todos in the state
       } catch (error) {
-        setError(error.message); // Set error message
+        setError(error.message);
       } finally {
-        setLoading(false); // End loading
+        setLoading(false); 
       }
     };
 
@@ -33,7 +33,7 @@ const Home = () => {
 
     const newTodoObj = {
       title: newTodo,
-      completed: false,  // Assuming 'completed' is false by default
+      completed: false, 
     };
 
     try {
@@ -50,10 +50,9 @@ const Home = () => {
         throw new Error('Failed to add todo');
       }
 
-      const savedTodo = await response.json(); // Parse response as JSON
-      // Add the new todo to the existing list of todos
+      const savedTodo = await response.json(); 
       setTodos([...todos, savedTodo]);
-      setNewTodo(''); // Clear the input field after adding
+      setNewTodo('');
     } catch (error) {
       setError(error.message); // Display error message if something fails
     }
